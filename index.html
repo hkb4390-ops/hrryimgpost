@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cloud Hosting | Telegram & Firebase</title>
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* --- Deep Colorful Animated Background --- */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background: linear-gradient(-45deg, #0f0c29, #302b63, #24243e, #001f3f);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* --- iOS Glassmorphism (Blur) Effect --- */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            padding: 40px;
+            width: 90%;
+            max-width: 900px;
+            margin: 20px;
+        }
+
+        /* --- Two Color Text Animation --- */
+        .animated-text {
+            font-size: 2.5rem;
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 30px;
+            background: linear-gradient(45deg, #ff007a, #00d2ff, #ff007a);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: shine 3s linear infinite;
+        }
+
+        @keyframes shine {
+            to { background-position: 200% center; }
+        }
+
+        /* --- Upload Boxes Container --- */
+        .upload-container {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        /* --- Individual Drop Box --- */
+        .drop-box {
+            flex: 1;
+            min-width: 250px;
+            height: 200px;
+            border: 2px dashed rgba(255, 255, 255, 0.3);
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .drop-box:hover, .drop-box.dragover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: #00d2ff;
+            transform: translateY(-5px);
+        }
+
+        .drop-box.pdf-box:hover {
+            border-color: #ff007a;
+        }
+
+        .drop-box i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+        
+        .photo-box i { color: #00d2ff; }
+        .pdf-box i { color: #ff007a; }
+
+        .drop-box span {
+            font-size: 1.1rem;
+            font-weight: 600;
+            pointer-events: none;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        /* --- Real-Time Status Bar --- */
+        .status-panel {
+            margin-top: 30px;
+            display: none;
+        }
+
+        .progress-container {
+            width: 100%;
+            height: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #00d2ff, #ff007a);
+            transition: width 0.3s ease;
+        }
+
+        .status-text {
+            font-size: 0.9rem;
+            color: #ddd;
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        /* --- Result Links Section --- */
+        .result-panel {
+            margin-top: 30px;
+            display: none;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            padding: 20px;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+            color: #aaa;
+        }
+
+        .input-group input, .input-group textarea {
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(0, 0, 0, 0.5);
+            color: #fff;
+            font-size: 0.9rem;
+            box-sizing: border-box;
+            outline: none;
+        }
+
+        .input-group textarea {
+            resize: none;
+            height: 80px;
+        }
+
+        .btn-copy {
+            background: linear-gradient(45deg, #00d2ff, #0072ff);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+            margin-top: 5px;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+
+        .btn-copy:hover {
+            opacity: 0.8;
+            box-shadow: 0 0 15px rgba(0, 210, 255, 0.5);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="glass-panel">
+        <h1 class="animated-text">Secure Cloud Uploader</h1>
+        
+        <div class="upload-container">
+            <!-- Image Drop Box -->
+            <label class="drop-box photo-box" id="drop-image">
+                <i class="fa-solid fa-cloud-arrow-up"></i>
+                <span>Drop Photo Here</span>
+                <input type="file" id="file-image" accept="image/*">
+            </label>
+
+            <!-- PDF Drop Box -->
+            <label class="drop-box pdf-box" id="drop-pdf">
+                <i class="fa-solid fa-file-pdf"></i>
+                <span>Drop PDF Here</span>
+                <input type="file" id="file-pdf" accept=".pdf">
+            </label>
+        </div>
+
+        <!-- Real-Time Status -->
+        <div class="status-panel" id="status-panel">
+            <div style="font-weight: 600;" id="file-name">Uploading...</div>
+            <div class="progress-container">
+                <div class="progress-bar" id="progress-bar"></div>
+            </div>
+            <div class="status-text" id="status-text">0% Uploaded</div>
+        </div>
+
+        <!-- Result Links -->
+        <div class="result-panel" id="result-panel">
+            <div class="input-group">
+                <label>Direct View Link (Online Preview):</label>
+                <input type="text" id="link-direct" readonly>
+                <button class="btn-copy" onclick="copyText('link-direct')"><i class="fa-solid fa-copy"></i> Copy</button>
+            </div>
+            <div class="input-group">
+                <label>iFrame Embed Code (For Websites):</label>
+                <textarea id="link-iframe" readonly></textarea>
+                <button class="btn-copy" onclick="copyText('link-iframe')"><i class="fa-solid fa-copy"></i> Copy</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK Setup (Using ES Modules for Browser) -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+        import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-storage.js";
+
+        // Your Firebase config
+        const firebaseConfig = {
+            apiKey: "AIzaSyAsz2EOx2GrhctleiwBRKf9tXK1-Of-4J4",
+            authDomain: "post-image-10160.firebaseapp.com",
+            projectId: "post-image-10160",
+            storageBucket: "post-image-10160.firebasestorage.app",
+            messagingSenderId: "269893633602",
+            appId: "1:269893633602:web:30aad5f39643b38c9f0fdb",
+            measurementId: "G-0Q5L5VBMKK"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const storage = getStorage(app);
+
+        // Telegram Bot Details
+        const BOT_TOKEN = "7954978602:AAGAk1SqrzLKBDG0RwbjX9uPLYzzMwX9OM0";
+        const CHAT_ID = "YOUR_TELEGRAM_CHAT_ID"; // IMPORTANT: Apni Telegram chat ID yaha daale jaha files receive karni hain
+
+        // UI Elements
+        const statusPanel = document.getElementById('status-panel');
+        const progressBar = document.getElementById('progress-bar');
+        const statusText = document.getElementById('status-text');
+        const fileNameUI = document.getElementById('file-name');
+        const resultPanel = document.getElementById('result-panel');
+        const directLinkInput = document.getElementById('link-direct');
+        const iframeInput = document.getElementById('link-iframe');
+
+        // Drag & Drop Handlers Setup
+        function setupDragDrop(boxId, inputId) {
+            const box = document.getElementById(boxId);
+            const input = document.getElementById(inputId);
+
+            box.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                box.classList.add('dragover');
+            });
+
+            box.addEventListener('dragleave', () => {
+                box.classList.remove('dragover');
+            });
+
+            box.addEventListener('drop', (e) => {
+                e.preventDefault();
+                box.classList.remove('dragover');
+                if (e.dataTransfer.files.length) {
+                    input.files = e.dataTransfer.files;
+                    handleFileUpload(input.files[0]);
+                }
+            });
+
+            input.addEventListener('change', function() {
+                if (this.files.length) handleFileUpload(this.files[0]);
+            });
+        }
+
+        setupDragDrop('drop-image', 'file-image');
+        setupDragDrop('drop-pdf', 'file-pdf');
+
+        // Main Upload Function
+        function handleFileUpload(file) {
+            if (!file) return;
+
+            // UI Reset
+            statusPanel.style.display = 'block';
+            resultPanel.style.display = 'none';
+            fileNameUI.innerText = "Uploading: " + file.name;
+            progressBar.style.width = '0%';
+            statusText.innerText = '0% Uploaded';
+
+            // 1. Upload to Firebase (For fast hosting, iframe & web viewer)
+            const storageRef = ref(storage, 'uploads/' + Date.now() + '_' + file.name);
+            const uploadTask = uploadBytesResumable(storageRef, file);
+
+            uploadTask.on('state_changed', 
+                (snapshot) => {
+                    // Progress Calculation
+                    const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                    progressBar.style.width = progress + '%';
+                    statusText.innerText = Math.round(progress) + '% Uploaded to Cloud Server...';
+                }, 
+                (error) => {
+                    console.error("Firebase Upload Error:", error);
+                    statusText.innerText = "Error uploading file!";
+                    statusText.style.color = "red";
+                }, 
+                () => {
+                    // On Success
+                    getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                        statusText.innerText = "Upload Complete! Generating Links...";
+                        showLinks(downloadURL, file.type);
+                        
+                        // 2. Also send silently to Telegram Bot
+                        sendToTelegram(file);
+                    });
+                }
+            );
+        }
+
+        // Send direct document/photo to Telegram Bot
+        function sendToTelegram(file) {
+            if (CHAT_ID === "YOUR_TELEGRAM_CHAT_ID") {
+                console.log("Telegram CHAT_ID is not set. Skipping Telegram upload.");
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('chat_id', CHAT_ID);
+            
+            let telegramAPI = `https://api.telegram.org/bot${BOT_TOKEN}/`;
+            
+            if (file.type.startsWith('image/')) {
+                telegramAPI += 'sendPhoto';
+                formData.append('photo', file);
+            } else {
+                telegramAPI += 'sendDocument';
+                formData.append('document', file);
+            }
+
+            fetch(telegramAPI, {
+                method: 'POST',
+                body: formData
+            }).then(response => response.json())
+              .then(data => console.log("Sent to Telegram Successfully!", data))
+              .catch(err => console.error("Telegram Upload Failed", err));
+        }
+
+        // Show Generated Links
+        function showLinks(url, fileType) {
+            resultPanel.style.display = 'block';
+            
+            // Your Vercel domain styling
+            const directLink = url; 
+            directLinkInput.value = directLink;
+
+            let iframeCode = '';
+            if (fileType === 'application/pdf') {
+                // PDF iframe (Modern browsers will view this directly instead of downloading)
+                iframeCode = `<iframe src="${directLink}" width="100%" height="600px" style="border:none; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.2);"></iframe>`;
+            } else {
+                // Image iframe/img tag
+                iframeCode = `<img src="${directLink}" alt="Hosted Image" style="max-width:100%; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">`;
+            }
+            
+            iframeInput.value = iframeCode;
+            statusText.innerText = "File Hosted Successfully! ✅";
+        }
+
+        // Expose Copy Function to Global Scope
+        window.copyText = function(elementId) {
+            const el = document.getElementById(elementId);
+            el.select();
+            document.execCommand("copy");
+            alert("Copied to clipboard!");
+        }
+    </script>
+</body>
+</html>
