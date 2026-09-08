@@ -1,408 +1,1072 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cloud Hosting | Telegram & Firebase</title>
-    <!-- FontAwesome for Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <style>
-        /* --- Deep Colorful Animated Background --- */
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background: linear-gradient(-45deg, #0f0c29, #302b63, #24243e, #001f3f);
-            background-size: 400% 400%;
-            animation: gradientBG 15s ease infinite;
-            color: #fff;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#050509">
+<title>HRRY Cloud</title>
 
-        @keyframes gradientBG {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{min-height:100%;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text",Inter,Arial,sans-serif}
+body{
+  color:#fff;
+  background:
+    radial-gradient(circle at 10% 0%,#244da055 0,transparent 28%),
+    radial-gradient(circle at 100% 10%,#9c36c955 0,transparent 28%),
+    radial-gradient(circle at 50% 100%,#00b9e633 0,transparent 35%),
+    #050509;
+  overflow-x:hidden;
+}
+body:before{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  background:linear-gradient(120deg,transparent 30%,#ffffff08 50%,transparent 70%);
+  animation:shine 9s linear infinite;
+}
+@keyframes shine{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
 
-        /* --- iOS Glassmorphism (Blur) Effect --- */
-        .glass-panel {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 24px;
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-            padding: 40px;
-            width: 90%;
-            max-width: 900px;
-            margin: 20px;
-        }
+.app{width:min(1150px,calc(100% - 24px));margin:auto;padding:18px 0 60px}
 
-        /* --- Two Color Text Animation --- */
-        .animated-text {
-            font-size: 2.5rem;
-            font-weight: 800;
-            text-align: center;
-            margin-bottom: 30px;
-            background: linear-gradient(45deg, #ff007a, #00d2ff, #ff007a);
-            background-size: 200% auto;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: shine 3s linear infinite;
-        }
+.nav{
+  height:64px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:8px 12px;
+  border:1px solid #ffffff16;
+  border-radius:24px;
+  background:#ffffff09;
+  backdrop-filter:blur(35px) saturate(160%);
+  -webkit-backdrop-filter:blur(35px) saturate(160%);
+  box-shadow:0 20px 60px #0006,inset 0 1px #fff2;
+}
+.brand{display:flex;align-items:center;gap:11px}
+.logo{
+  width:45px;height:45px;border-radius:16px;
+  display:grid;place-items:center;
+  font-size:15px;font-weight:900;
+  background:linear-gradient(145deg,#ffffff26,#ffffff06);
+  border:1px solid #ffffff20;
+  box-shadow:inset 0 1px #fff3,0 8px 30px #0005;
+}
+.brand b{font-size:16px}
+.brand small{display:block;color:#92929f;font-size:10px;margin-top:2px}
+.live{
+  display:flex;align-items:center;gap:7px;
+  padding:9px 13px;border-radius:999px;
+  color:#72f6ac;font-size:11px;
+  background:#35e68a0c;border:1px solid #35e68a22;
+}
+.dot{width:7px;height:7px;border-radius:50%;background:#35e68a;box-shadow:0 0 13px #35e68a;animation:dot 1.4s infinite}
+@keyframes dot{50%{opacity:.3;transform:scale(.65)}}
 
-        @keyframes shine {
-            to { background-position: 200% center; }
-        }
+.hero{text-align:center;padding:65px 10px 42px}
+.hero h1{
+  font-size:clamp(42px,8vw,78px);
+  line-height:.95;
+  letter-spacing:-4px;
+  font-weight:950;
+  background:linear-gradient(90deg,#fff,#7fa9ff,#d27dff,#fff);
+  background-size:250% auto;
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+  animation:text 6s linear infinite;
+}
+@keyframes text{to{background-position:250% center}}
+.hero p{
+  max-width:610px;margin:20px auto 0;
+  color:#9999a7;font-size:14px;line-height:1.7
+}
 
-        /* --- Upload Boxes Container --- */
-        .upload-container {
-            display: flex;
-            gap: 30px;
-            flex-wrap: wrap;
-        }
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
 
-        /* --- Individual Drop Box --- */
-        .drop-box {
-            flex: 1;
-            min-width: 250px;
-            height: 200px;
-            border: 2px dashed rgba(255, 255, 255, 0.3);
-            border-radius: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            background: rgba(0, 0, 0, 0.2);
-            position: relative;
-            overflow: hidden;
-        }
+.card{
+  position:relative;
+  padding:20px;
+  overflow:hidden;
+  border-radius:31px;
+  border:1px solid #ffffff17;
+  background:linear-gradient(145deg,#ffffff10,#ffffff04);
+  backdrop-filter:blur(40px) saturate(150%);
+  -webkit-backdrop-filter:blur(40px) saturate(150%);
+  box-shadow:0 30px 90px #0007,inset 0 1px #fff2;
+}
+.card:after{
+  content:"";
+  position:absolute;
+  width:180px;height:180px;
+  border-radius:50%;
+  filter:blur(70px);
+  opacity:.16;
+  right:-90px;top:-90px;
+  pointer-events:none
+}
+.photo:after{background:#4385ff}
+.pdf:after{background:#c04dff}
 
-        .drop-box:hover, .drop-box.dragover {
-            background: rgba(255, 255, 255, 0.1);
-            border-color: #00d2ff;
-            transform: translateY(-5px);
-        }
+.head{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+.icon{
+  width:47px;height:47px;border-radius:16px;
+  display:grid;place-items:center;font-size:21px;
+  background:#ffffff0d;border:1px solid #ffffff16;
+  box-shadow:inset 0 1px #fff2
+}
+.head h2{font-size:17px}
+.head span{display:block;color:#8d8d99;font-size:11px;margin-top:4px}
 
-        .drop-box.pdf-box:hover {
-            border-color: #ff007a;
-        }
+.drop{
+  position:relative;
+  min-height:255px;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  text-align:center;
+  padding:22px;
+  border-radius:24px;
+  border:1.5px dashed #ffffff22;
+  background:#00000016;
+  cursor:pointer;
+  transition:.25s;
+}
+.drop:hover,.drop.drag{
+  transform:translateY(-3px);
+  border-color:#7fa8ff99;
+  background:#628cff0b;
+  box-shadow:0 15px 50px #5080ff12,inset 0 0 35px #fff008;
+}
+.pdf .drop:hover,.pdf .drop.drag{
+  border-color:#cf7dff99;
+  background:#bd59ff0b;
+}
+.dropIcon{
+  width:67px;height:67px;
+  border-radius:22px;
+  display:grid;place-items:center;
+  font-size:29px;margin-bottom:15px;
+  background:linear-gradient(145deg,#ffffff19,#ffffff05);
+  border:1px solid #ffffff18;
+  box-shadow:0 12px 35px #0005,inset 0 1px #fff3;
+}
+.drop strong{font-size:15px}
+.drop p{color:#888894;font-size:11px;line-height:1.6;margin-top:7px}
+.choose{
+  margin-top:17px;
+  padding:10px 16px;
+  border-radius:14px;
+  background:#ffffff0d;
+  border:1px solid #ffffff18;
+  font-size:12px;font-weight:700
+}
+input{display:none}
 
-        .drop-box i {
-            font-size: 3rem;
-            margin-bottom: 15px;
-        }
-        
-        .photo-box i { color: #00d2ff; }
-        .pdf-box i { color: #ff007a; }
+.status{
+  display:none;
+  margin-top:20px;
+  padding:18px;
+  border-radius:25px;
+  background:#ffffff08;
+  border:1px solid #ffffff13;
+  backdrop-filter:blur(30px);
+}
+.status.show{display:block}
+.statusTop{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.file{min-width:0}
+.fileName{font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fileSize{font-size:10px;color:#858591;margin-top:4px}
+.state{font-size:11px;color:#8fb0ff;white-space:nowrap}
+.bar{
+  height:8px;margin-top:15px;
+  background:#ffffff0b;border-radius:99px;overflow:hidden
+}
+.fill{
+  width:0;height:100%;border-radius:inherit;
+  background:linear-gradient(90deg,#4d83ff,#ae55ff,#20d9ff);
+  background-size:200% 100%;
+  animation:bar 2s linear infinite;
+  transition:width .2s
+}
+@keyframes bar{to{background-position:200% 0}}
 
-        .drop-box span {
-            font-size: 1.1rem;
-            font-weight: 600;
-            pointer-events: none;
-        }
+.percent{
+  display:flex;justify-content:space-between;
+  margin-top:8px;color:#777783;font-size:10px
+}
 
-        input[type="file"] {
-            display: none;
-        }
+.links{
+  display:none;
+  margin-top:15px;
+  gap:8px;
+  flex-wrap:wrap
+}
+.links.show{display:flex}
+.link{
+  flex:1 1 270px;
+  min-width:0;
+  padding:11px 13px;
+  border-radius:14px;
+  background:#0000001c;
+  border:1px solid #ffffff0d
+}
+.link small{display:block;color:#747481;font-size:9px;text-transform:uppercase;letter-spacing:.7px;margin-bottom:5px}
+.link div{font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.copy{
+  border:1px solid #ffffff14;
+  background:#ffffff0b;color:#fff;
+  padding:0 15px;border-radius:14px;
+  font-weight:700;cursor:pointer
+}
+.copy:active{transform:scale(.96)}
 
-        /* --- Real-Time Status Bar --- */
-        .status-panel {
-            margin-top: 30px;
-            display: none;
-        }
+.viewer{display:none;margin-top:20px}
+.viewer.show{display:block}
+.viewerHead{
+  display:flex;justify-content:space-between;
+  align-items:center;margin-bottom:10px
+}
+.viewerHead h3{font-size:16px}
+.open{
+  border:1px solid #ffffff16;
+  background:#ffffff0c;color:#fff;
+  border-radius:13px;padding:9px 13px;
+  font-size:11px;font-weight:700
+}
+.preview{
+  width:100%;
+  max-height:680px;
+  border-radius:24px;
+  border:1px solid #ffffff13;
+  background:#08080b
+}
+.pdfFrame{
+  width:100%;height:680px;
+  border:1px solid #ffffff13;
+  border-radius:24px;
+  background:#111
+}
 
-        .progress-container {
-            width: 100%;
-            height: 12px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            overflow: hidden;
-            margin-top: 10px;
-        }
+.toast{
+  position:fixed;
+  left:50%;bottom:22px;
+  transform:translate(-50%,25px);
+  opacity:0;
+  padding:11px 17px;
+  border-radius:999px;
+  background:#17171dcc;
+  border:1px solid #ffffff18;
+  backdrop-filter:blur(25px);
+  font-size:12px;
+  z-index:100;
+  transition:.25s
+}
+.toast.show{opacity:1;transform:translate(-50%,0)}
 
-        .progress-bar {
-            height: 100%;
-            width: 0%;
-            background: linear-gradient(90deg, #00d2ff, #ff007a);
-            transition: width 0.3s ease;
-        }
+.footer{text-align:center;color:#5f5f6a;font-size:10px;margin-top:28px}
 
-        .status-text {
-            font-size: 0.9rem;
-            color: #ddd;
-            margin-top: 10px;
-            text-align: center;
-        }
-
-        /* --- Result Links Section --- */
-        .result-panel {
-            margin-top: 30px;
-            display: none;
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 15px;
-            padding: 20px;
-        }
-
-        .input-group {
-            margin-bottom: 15px;
-        }
-
-        .input-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-size: 0.9rem;
-            color: #aaa;
-        }
-
-        .input-group input, .input-group textarea {
-            width: 100%;
-            padding: 12px;
-            border-radius: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            background: rgba(0, 0, 0, 0.5);
-            color: #fff;
-            font-size: 0.9rem;
-            box-sizing: border-box;
-            outline: none;
-        }
-
-        .input-group textarea {
-            resize: none;
-            height: 80px;
-        }
-
-        .btn-copy {
-            background: linear-gradient(45deg, #00d2ff, #0072ff);
-            border: none;
-            padding: 10px 20px;
-            border-radius: 8px;
-            color: white;
-            cursor: pointer;
-            margin-top: 5px;
-            font-weight: bold;
-            transition: 0.2s;
-        }
-
-        .btn-copy:hover {
-            opacity: 0.8;
-            box-shadow: 0 0 15px rgba(0, 210, 255, 0.5);
-        }
-    </style>
+@media(max-width:760px){
+  .app{width:calc(100% - 14px);padding-top:10px}
+  .grid{grid-template-columns:1fr}
+  .hero{padding:50px 8px 30px}
+  .hero h1{letter-spacing:-2.5px}
+  .card{border-radius:26px}
+  .drop{min-height:225px}
+  .pdfFrame{height:70vh}
+}
+</style>
 </head>
+
 <body>
 
-    <div class="glass-panel">
-        <h1 class="animated-text">Secure Cloud Uploader</h1>
-        
-        <div class="upload-container">
-            <!-- Image Drop Box -->
-            <label class="drop-box photo-box" id="drop-image">
-                <i class="fa-solid fa-cloud-arrow-up"></i>
-                <span>Drop Photo Here</span>
-                <input type="file" id="file-image" accept="image/*">
-            </label>
+<div class="app">
 
-            <!-- PDF Drop Box -->
-            <label class="drop-box pdf-box" id="drop-pdf">
-                <i class="fa-solid fa-file-pdf"></i>
-                <span>Drop PDF Here</span>
-                <input type="file" id="file-pdf" accept=".pdf">
-            </label>
-        </div>
+<header class="nav">
+  <div class="brand">
+    <div class="logo">HR</div>
+    <div>
+      <b>HRRY Cloud</b>
+      <small>Telegram File Storage</small>
+    </div>
+  </div>
 
-        <!-- Real-Time Status -->
-        <div class="status-panel" id="status-panel">
-            <div style="font-weight: 600;" id="file-name">Uploading...</div>
-            <div class="progress-container">
-                <div class="progress-bar" id="progress-bar"></div>
-            </div>
-            <div class="status-text" id="status-text">0% Uploaded</div>
-        </div>
+  <div class="live">
+    <i class="dot"></i>
+    <span id="connection">LIVE</span>
+  </div>
+</header>
 
-        <!-- Result Links -->
-        <div class="result-panel" id="result-panel">
-            <div class="input-group">
-                <label>Direct View Link (Online Preview):</label>
-                <input type="text" id="link-direct" readonly>
-                <button class="btn-copy" onclick="copyText('link-direct')"><i class="fa-solid fa-copy"></i> Copy</button>
-            </div>
-            <div class="input-group">
-                <label>iFrame Embed Code (For Websites):</label>
-                <textarea id="link-iframe" readonly></textarea>
-                <button class="btn-copy" onclick="copyText('link-iframe')"><i class="fa-solid fa-copy"></i> Copy</button>
-            </div>
-        </div>
+<section class="hero">
+  <h1>Your files.<br>Everywhere.</h1>
+  <p>
+    Upload photos and PDF documents, watch the upload status
+    in real time and instantly open your files on the web.
+  </p>
+</section>
+
+<section class="grid">
+
+  <!-- PHOTO -->
+  <div class="card photo">
+
+    <div class="head">
+      <div class="icon">🖼️</div>
+      <div>
+        <h2>Photo Storage</h2>
+        <span>JPG · PNG · WEBP · GIF</span>
+      </div>
     </div>
 
-    <!-- Firebase SDK Setup (Using ES Modules for Browser) -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
-        import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-storage.js";
+    <label class="drop" id="photoDrop" for="photoInput">
+      <div class="dropIcon">📸</div>
+      <strong>Drop photo here</strong>
+      <p>Drag & drop your image<br>or choose a file</p>
+      <span class="choose">Choose Photo</span>
+    </label>
 
-        // Your Firebase config
-        const firebaseConfig = {
-            apiKey: "AIzaSyAsz2EOx2GrhctleiwBRKf9tXK1-Of-4J4",
-            authDomain: "post-image-10160.firebaseapp.com",
-            projectId: "post-image-10160",
-            storageBucket: "post-image-10160.firebasestorage.app",
-            messagingSenderId: "269893633602",
-            appId: "1:269893633602:web:30aad5f39643b38c9f0fdb",
-            measurementId: "G-0Q5L5VBMKK"
-        };
+    <input
+      id="photoInput"
+      type="file"
+      accept="image/jpeg,image/png,image/webp,image/gif"
+    >
 
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const storage = getStorage(app);
+  </div>
 
-        // Telegram Bot Details
-        const BOT_TOKEN = "7954978602:AAGAk1SqrzLKBDG0RwbjX9uPLYzzMwX9OM0";
-        const CHAT_ID = "YOUR_TELEGRAM_CHAT_ID"; // IMPORTANT: Apni Telegram chat ID yaha daale jaha files receive karni hain
 
-        // UI Elements
-        const statusPanel = document.getElementById('status-panel');
-        const progressBar = document.getElementById('progress-bar');
-        const statusText = document.getElementById('status-text');
-        const fileNameUI = document.getElementById('file-name');
-        const resultPanel = document.getElementById('result-panel');
-        const directLinkInput = document.getElementById('link-direct');
-        const iframeInput = document.getElementById('link-iframe');
+  <!-- PDF -->
+  <div class="card pdf">
 
-        // Drag & Drop Handlers Setup
-        function setupDragDrop(boxId, inputId) {
-            const box = document.getElementById(boxId);
-            const input = document.getElementById(inputId);
+    <div class="head">
+      <div class="icon">📄</div>
+      <div>
+        <h2>PDF Storage</h2>
+        <span>PDF · Online Reader</span>
+      </div>
+    </div>
 
-            box.addEventListener('dragover', (e) => {
-                e.preventDefault();
-                box.classList.add('dragover');
-            });
+    <label class="drop" id="pdfDrop" for="pdfInput">
+      <div class="dropIcon">📕</div>
+      <strong>Drop PDF here</strong>
+      <p>Drag & drop your document<br>or choose a file</p>
+      <span class="choose">Choose PDF</span>
+    </label>
 
-            box.addEventListener('dragleave', () => {
-                box.classList.remove('dragover');
-            });
+    <input
+      id="pdfInput"
+      type="file"
+      accept="application/pdf,.pdf"
+    >
 
-            box.addEventListener('drop', (e) => {
-                e.preventDefault();
-                box.classList.remove('dragover');
-                if (e.dataTransfer.files.length) {
-                    input.files = e.dataTransfer.files;
-                    handleFileUpload(input.files[0]);
-                }
-            });
+  </div>
 
-            input.addEventListener('change', function() {
-                if (this.files.length) handleFileUpload(this.files[0]);
-            });
+</section>
+
+
+<!-- STATUS -->
+<section class="status" id="status">
+
+  <div class="statusTop">
+
+    <div class="file">
+      <div class="fileName" id="fileName">—</div>
+      <div class="fileSize" id="fileSize">—</div>
+    </div>
+
+    <div class="state" id="state">Preparing…</div>
+
+  </div>
+
+  <div class="bar">
+    <div class="fill" id="fill"></div>
+  </div>
+
+  <div class="percent">
+    <span id="progressText">0%</span>
+    <span id="speed">Waiting</span>
+  </div>
+
+  <div class="links" id="links">
+
+    <div class="link">
+      <small>Direct View URL</small>
+      <div id="viewUrl">—</div>
+    </div>
+
+    <button class="copy" id="copyView">Copy</button>
+
+    <div class="link">
+      <small>Iframe URL</small>
+      <div id="iframeUrl">—</div>
+    </div>
+
+    <button class="copy" id="copyIframe">Copy</button>
+
+  </div>
+
+</section>
+
+
+<!-- VIEWER -->
+<section class="viewer" id="viewer">
+
+  <div class="viewerHead">
+    <h3 id="viewerTitle">Preview</h3>
+    <button class="open" id="openBtn">Open</button>
+  </div>
+
+  <div id="preview"></div>
+
+</section>
+
+<div class="footer">
+  HRRY Cloud · Telegram Powered · Realtime
+</div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+
+<script type="module">
+
+/* =====================================================
+   FIREBASE
+===================================================== */
+
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
+
+import {
+  getDatabase,
+  ref,
+  onValue
+}
+from "https://www.gstatic.com/firebasejs/12.2.1/firebase-database.js";
+
+
+const firebaseConfig = {
+  apiKey:"AIzaSyAsz2EOx2GrhctleiwBR9qXK1-Of-4J4",
+  authDomain:"post-image-10160.firebaseapp.com",
+  projectId:"post-image-10160",
+  storageBucket:"post-image-10160.firebasestorage.app",
+  messagingSenderId:"269893633602",
+  appId:"1:269893633602:web:30aad5f39643b38c9f0fdb",
+  measurementId:"G-0Q5L5VBMKK"
+};
+
+const firebaseApp = initializeApp(firebaseConfig);
+const db = getDatabase(firebaseApp);
+
+
+/* =====================================================
+   CONFIG
+===================================================== */
+
+/*
+  यह endpoint आपके upload service का endpoint है।
+
+  Expected response:
+
+  {
+    "success": true,
+    "viewUrl": "https://your-domain/file/xxxxx",
+    "iframeUrl": "https://your-domain/embed/xxxxx",
+    "fileId": "xxxxx"
+  }
+
+  Upload request:
+  POST multipart/form-data
+  field name = "file"
+
+  Firebase status path:
+  uploads/{fileId}
+
+  Example Firebase object:
+
+  {
+    "name": "photo.jpg",
+    "status": "uploading",
+    "progress": 73,
+    "speed": "2.4 MB/s",
+    "viewUrl": "...",
+    "iframeUrl": "..."
+  }
+*/
+
+const UPLOAD_ENDPOINT = "/api/upload";
+
+
+/* =====================================================
+   ELEMENTS
+===================================================== */
+
+const photoInput = document.getElementById("photoInput");
+const pdfInput   = document.getElementById("pdfInput");
+
+const photoDrop = document.getElementById("photoDrop");
+const pdfDrop   = document.getElementById("pdfDrop");
+
+const statusBox = document.getElementById("status");
+const fileName  = document.getElementById("fileName");
+const fileSize  = document.getElementById("fileSize");
+const state     = document.getElementById("state");
+const fill      = document.getElementById("fill");
+const progressText = document.getElementById("progressText");
+const speed     = document.getElementById("speed");
+
+const links     = document.getElementById("links");
+const viewUrl   = document.getElementById("viewUrl");
+const iframeUrl = document.getElementById("iframeUrl");
+
+const viewer    = document.getElementById("viewer");
+const preview   = document.getElementById("preview");
+const viewerTitle = document.getElementById("viewerTitle");
+const openBtn   = document.getElementById("openBtn");
+
+const toast     = document.getElementById("toast");
+const connection = document.getElementById("connection");
+
+
+/* =====================================================
+   HELPERS
+===================================================== */
+
+function formatBytes(bytes){
+
+  if(!bytes) return "0 B";
+
+  const units = ["B","KB","MB","GB","TB"];
+  const i = Math.floor(Math.log(bytes)/Math.log(1024));
+
+  return (
+    bytes / Math.pow(1024,i)
+  ).toFixed(i ? 2 : 0) + " " + units[i];
+
+}
+
+
+function showToast(message){
+
+  toast.textContent = message;
+  toast.classList.add("show");
+
+  clearTimeout(showToast.timer);
+
+  showToast.timer = setTimeout(()=>{
+    toast.classList.remove("show");
+  },2400);
+
+}
+
+
+function setProgress(value){
+
+  value = Math.max(0,Math.min(100,value));
+
+  fill.style.width = value + "%";
+  progressText.textContent = Math.round(value) + "%";
+
+}
+
+
+function resetViewer(){
+
+  viewer.classList.remove("show");
+  preview.innerHTML = "";
+
+}
+
+
+function showImage(url,name){
+
+  viewerTitle.textContent = name || "Photo Preview";
+
+  preview.innerHTML = "";
+
+  const img = document.createElement("img");
+
+  img.className = "preview";
+  img.src = url;
+  img.alt = name || "Photo";
+  img.loading = "lazy";
+
+  preview.appendChild(img);
+
+  viewer.classList.add("show");
+
+  openBtn.onclick = ()=>{
+    window.open(url,"_blank","noopener,noreferrer");
+  };
+
+}
+
+
+function showPDF(url,name){
+
+  viewerTitle.textContent = name || "PDF Reader";
+
+  preview.innerHTML = "";
+
+  const frame = document.createElement("iframe");
+
+  frame.className = "pdfFrame";
+  frame.src = url;
+  frame.title = "PDF Reader";
+
+  /*
+    #toolbar=0 keeps the browser PDF viewer cleaner.
+    The actual availability of download controls depends
+    on the browser's built-in PDF viewer.
+  */
+
+  preview.appendChild(frame);
+
+  viewer.classList.add("show");
+
+  openBtn.onclick = ()=>{
+    window.open(url,"_blank","noopener,noreferrer");
+  };
+
+}
+
+
+function displayResult(data,file){
+
+  if(!data || !data.viewUrl){
+
+    showToast("Upload completed but URL was not returned");
+    return;
+
+  }
+
+  const direct = data.viewUrl;
+  const iframe = data.iframeUrl || direct;
+
+  viewUrl.textContent = direct;
+  iframeUrl.textContent = iframe;
+
+  links.classList.add("show");
+
+  state.textContent = "Completed";
+  state.style.color = "#65f4a3";
+
+  setProgress(100);
+
+  if(file.type.startsWith("image/")){
+
+    showImage(direct,file.name);
+
+  }else if(file.type === "application/pdf"){
+
+    showPDF(direct,file.name);
+
+  }
+
+}
+
+
+async function copyText(text){
+
+  try{
+
+    await navigator.clipboard.writeText(text);
+
+    showToast("Copied");
+
+  }catch{
+
+    const area = document.createElement("textarea");
+
+    area.value = text;
+    document.body.appendChild(area);
+
+    area.select();
+
+    document.execCommand("copy");
+
+    area.remove();
+
+    showToast("Copied");
+
+  }
+
+}
+
+
+/* =====================================================
+   FIREBASE REALTIME STATUS
+===================================================== */
+
+function watchUpload(fileId,file){
+
+  if(!fileId) return;
+
+  const uploadRef = ref(db,"uploads/" + fileId);
+
+  onValue(uploadRef,(snapshot)=>{
+
+    const data = snapshot.val();
+
+    if(!data) return;
+
+    if(typeof data.progress === "number"){
+      setProgress(data.progress);
+    }
+
+    if(data.status){
+      state.textContent = data.status;
+    }
+
+    if(data.speed){
+      speed.textContent = data.speed;
+    }
+
+    if(data.status === "completed"){
+
+      state.textContent = "Completed";
+      state.style.color = "#65f4a3";
+
+      if(data.viewUrl){
+
+        displayResult({
+          viewUrl:data.viewUrl,
+          iframeUrl:data.iframeUrl
+        },file);
+
+      }
+
+    }
+
+    if(data.status === "error"){
+
+      state.textContent = "Upload failed";
+      state.style.color = "#ff7777";
+
+      showToast(data.message || "Upload failed");
+
+    }
+
+  },(error)=>{
+
+    console.warn("Firebase status:",error);
+
+    connection.textContent = "LOCAL";
+
+  });
+
+}
+
+
+/* =====================================================
+   UPLOAD
+===================================================== */
+
+async function uploadFile(file){
+
+  if(!file) return;
+
+
+  /* validation */
+
+  const isPhoto = file.type.startsWith("image/");
+  const isPDF   = file.type === "application/pdf";
+
+
+  if(!isPhoto && !isPDF){
+
+    showToast("Only photo or PDF is allowed");
+    return;
+
+  }
+
+
+  statusBox.classList.add("show");
+  links.classList.remove("show");
+
+  resetViewer();
+
+  fileName.textContent = file.name;
+  fileSize.textContent = formatBytes(file.size);
+
+  state.textContent = "Uploading…";
+  state.style.color = "#8fb0ff";
+
+  speed.textContent = "Starting…";
+
+  setProgress(0);
+
+
+  const form = new FormData();
+
+  form.append("file",file,file.name);
+
+
+  /*
+    XMLHttpRequest is used instead of fetch so that
+    browser upload progress can be displayed.
+  */
+
+  const xhr = new XMLHttpRequest();
+
+  const started = performance.now();
+
+
+  xhr.upload.addEventListener("progress",(event)=>{
+
+    if(!event.lengthComputable) return;
+
+    const percent =
+      (event.loaded / event.total) * 100;
+
+    setProgress(percent);
+
+    const elapsed =
+      (performance.now() - started) / 1000;
+
+    if(elapsed > 0){
+
+      const bytesPerSecond =
+        event.loaded / elapsed;
+
+      speed.textContent =
+        formatBytes(bytesPerSecond) + "/s";
+
+    }
+
+  });
+
+
+  xhr.onreadystatechange = async ()=>{
+
+    if(xhr.readyState !== XMLHttpRequest.DONE){
+      return;
+    }
+
+
+    if(xhr.status >= 200 && xhr.status < 300){
+
+      let data;
+
+      try{
+
+        data = JSON.parse(xhr.responseText);
+
+      }catch{
+
+        state.textContent = "Invalid server response";
+        state.style.color = "#ff7777";
+
+        showToast("Invalid upload response");
+        return;
+
+      }
+
+
+      /*
+        If backend returns fileId, Firebase realtime
+        updates will take over the status.
+      */
+
+      if(data.fileId){
+
+        watchUpload(data.fileId,file);
+
+      }
+
+
+      if(data.viewUrl){
+
+        displayResult(data,file);
+
+      }else{
+
+        state.textContent = "Processing…";
+        speed.textContent = "Telegram";
+
+      }
+
+    }else{
+
+      state.textContent = "Upload failed";
+      state.style.color = "#ff7777";
+
+      let message = "Upload failed";
+
+      try{
+
+        const error = JSON.parse(xhr.responseText);
+
+        if(error.message){
+          message = error.message;
         }
 
-        setupDragDrop('drop-image', 'file-image');
-        setupDragDrop('drop-pdf', 'file-pdf');
+      }catch{}
 
-        // Main Upload Function
-        function handleFileUpload(file) {
-            if (!file) return;
+      showToast(message);
 
-            // UI Reset
-            statusPanel.style.display = 'block';
-            resultPanel.style.display = 'none';
-            fileNameUI.innerText = "Uploading: " + file.name;
-            progressBar.style.width = '0%';
-            statusText.innerText = '0% Uploaded';
+    }
 
-            // 1. Upload to Firebase (For fast hosting, iframe & web viewer)
-            const storageRef = ref(storage, 'uploads/' + Date.now() + '_' + file.name);
-            const uploadTask = uploadBytesResumable(storageRef, file);
+  };
 
-            uploadTask.on('state_changed', 
-                (snapshot) => {
-                    // Progress Calculation
-                    const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                    progressBar.style.width = progress + '%';
-                    statusText.innerText = Math.round(progress) + '% Uploaded to Cloud Server...';
-                }, 
-                (error) => {
-                    console.error("Firebase Upload Error:", error);
-                    statusText.innerText = "Error uploading file!";
-                    statusText.style.color = "red";
-                }, 
-                () => {
-                    // On Success
-                    getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-                        statusText.innerText = "Upload Complete! Generating Links...";
-                        showLinks(downloadURL, file.type);
-                        
-                        // 2. Also send silently to Telegram Bot
-                        sendToTelegram(file);
-                    });
-                }
-            );
-        }
 
-        // Send direct document/photo to Telegram Bot
-        function sendToTelegram(file) {
-            if (CHAT_ID === "YOUR_TELEGRAM_CHAT_ID") {
-                console.log("Telegram CHAT_ID is not set. Skipping Telegram upload.");
-                return;
-            }
+  xhr.onerror = ()=>{
 
-            const formData = new FormData();
-            formData.append('chat_id', CHAT_ID);
-            
-            let telegramAPI = `https://api.telegram.org/bot${BOT_TOKEN}/`;
-            
-            if (file.type.startsWith('image/')) {
-                telegramAPI += 'sendPhoto';
-                formData.append('photo', file);
-            } else {
-                telegramAPI += 'sendDocument';
-                formData.append('document', file);
-            }
+    state.textContent = "Network error";
+    state.style.color = "#ff7777";
 
-            fetch(telegramAPI, {
-                method: 'POST',
-                body: formData
-            }).then(response => response.json())
-              .then(data => console.log("Sent to Telegram Successfully!", data))
-              .catch(err => console.error("Telegram Upload Failed", err));
-        }
+    showToast("Network error");
 
-        // Show Generated Links
-        function showLinks(url, fileType) {
-            resultPanel.style.display = 'block';
-            
-            // Your Vercel domain styling
-            const directLink = url; 
-            directLinkInput.value = directLink;
+  };
 
-            let iframeCode = '';
-            if (fileType === 'application/pdf') {
-                // PDF iframe (Modern browsers will view this directly instead of downloading)
-                iframeCode = `<iframe src="${directLink}" width="100%" height="600px" style="border:none; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.2);"></iframe>`;
-            } else {
-                // Image iframe/img tag
-                iframeCode = `<img src="${directLink}" alt="Hosted Image" style="max-width:100%; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">`;
-            }
-            
-            iframeInput.value = iframeCode;
-            statusText.innerText = "File Hosted Successfully! ✅";
-        }
 
-        // Expose Copy Function to Global Scope
-        window.copyText = function(elementId) {
-            const el = document.getElementById(elementId);
-            el.select();
-            document.execCommand("copy");
-            alert("Copied to clipboard!");
-        }
-    </script>
+  xhr.open("POST",UPLOAD_ENDPOINT,true);
+
+  xhr.setRequestHeader(
+    "X-Requested-With",
+    "XMLHttpRequest"
+  );
+
+  xhr.send(form);
+
+}
+
+
+/* =====================================================
+   INPUT EVENTS
+===================================================== */
+
+photoInput.addEventListener("change",()=>{
+
+  const file = photoInput.files[0];
+
+  if(file) uploadFile(file);
+
+  photoInput.value = "";
+
+});
+
+
+pdfInput.addEventListener("change",()=>{
+
+  const file = pdfInput.files[0];
+
+  if(file) uploadFile(file);
+
+  pdfInput.value = "";
+
+});
+
+
+/* =====================================================
+   DRAG & DROP
+===================================================== */
+
+function setupDropZone(zone,accept){
+
+  ["dragenter","dragover"].forEach(eventName=>{
+
+    zone.addEventListener(eventName,(event)=>{
+
+      event.preventDefault();
+      event.stopPropagation();
+
+      zone.classList.add("drag");
+
+    });
+
+  });
+
+
+  ["dragleave","drop"].forEach(eventName=>{
+
+    zone.addEventListener(eventName,(event)=>{
+
+      event.preventDefault();
+      event.stopPropagation();
+
+      zone.classList.remove("drag");
+
+    });
+
+  });
+
+
+  zone.addEventListener("drop",(event)=>{
+
+    const files = event.dataTransfer.files;
+
+    if(!files || !files.length) return;
+
+    const file = files[0];
+
+    if(!accept(file)){
+
+      showToast("Wrong file type");
+      return;
+
+    }
+
+    uploadFile(file);
+
+  });
+
+}
+
+
+setupDropZone(
+  photoDrop,
+  file => file.type.startsWith("image/")
+);
+
+
+setupDropZone(
+  pdfDrop,
+  file => file.type === "application/pdf"
+);
+
+
+/* =====================================================
+   COPY BUTTONS
+===================================================== */
+
+document.getElementById("copyView")
+.addEventListener("click",()=>{
+
+  copyText(viewUrl.textContent);
+
+});
+
+
+document.getElementById("copyIframe")
+.addEventListener("click",()=>{
+
+  copyText(iframeUrl.textContent);
+
+});
+
+
+/* =====================================================
+   FIREBASE CONNECTION STATUS
+===================================================== */
+
+onValue(
+  ref(db,".info/connected"),
+  snapshot => {
+
+    if(snapshot.val() === true){
+
+      connection.textContent = "LIVE";
+
+    }else{
+
+      connection.textContent = "OFFLINE";
+
+    }
+
+  }
+);
+
+</script>
+
 </body>
 </html>
