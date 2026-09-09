@@ -2460,14 +2460,43 @@ function openPdf(rawUrl,rawTitle,el){
  }
 
 
+ /*
+  * PDF PREVIEW SETUP
+  *
+  * Google Drive /preview links are loaded directly.
+  * Normal PDF links continue to use Google Docs Viewer.
+  */
+
+ let viewer=url;
+
+ const driveFile=
+  url.match(
+   /^https?:\/\/drive\.google\.com\/file\/d\/([^/]+)(?:\/[^?]*)?(?:\?.*)?$/i
+  );
+
+ const drivePreview=
+  /^(https?:\/\/)?(?:drive|docs)\.google\.com\/file\/d\/[^/]+\/preview(?:[?#].*)?$/i
+   .test(url);
+
+ if(driveFile && !drivePreview){
+
+  viewer=
+   "https://drive.google.com/file/d/"+
+   driveFile[1]+
+   "/preview";
+
+ }else if(!drivePreview){
+
+  viewer=
+   "https://docs.google.com/gview?url="+
+   encodeURIComponent(url)+
+   "&embedded=true";
+
+ }
+
+
  $("pdfTitle").textContent=
   title;
-
-
- const viewer=
-  "https://docs.google.com/gview?url="+
-  encodeURIComponent(url)+
-  "&embedded=true";
 
 
  $("pdfFrame").src=
